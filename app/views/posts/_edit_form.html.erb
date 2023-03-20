@@ -1,0 +1,28 @@
+<%= form_with(model: post, data: { controller: "poster", autosave_delay: "1000" }) do |form| %>
+
+  <% if post.errors.any? %>
+    <p><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</p>
+    <% post.errors.each do |error| %>
+      <p><%= error.full_message %></p>
+    <% end %>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title, data: { action: 'keyup->poster#save blur->poster#save' } %>
+  </div>
+
+  <div>
+    <%= form.label :body, style: "display: block" %>
+    <%= form.rich_text_area :body, data: { action: 'keyup->poster#save blur->poster#save' } %>
+  </div>
+
+  <div>
+    <%= form.label :views, style: "display: block" %>
+    <%= form.number_field :views %>
+  </div>
+
+  <div class="mt-3">
+    <%= form.submit class: "btn btn-sm btn-success" %>
+  </div>
+<% end %>
