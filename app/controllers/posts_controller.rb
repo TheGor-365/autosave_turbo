@@ -5,8 +5,18 @@ class PostsController < ApplicationController
     @posts = Post.all
   end
 
-  def show; end
-  def edit; end
+  def show
+    @post.increment(:views)
+  end
+
+  def edit
+    post_draft = PostDraft.find_by(id: params[:id])
+
+    return unless post_draft
+
+    @post.title = post_draft.title
+    @post.body = post_draft.body
+  end
 
   def new
     @post = Post.new
@@ -40,12 +50,26 @@ class PostsController < ApplicationController
     end
   end
 
+  def autosave
+    post_draft = PostDraft.find_or_initialize_by(id: params[:id])
+    post_draft.assign_attributes(post_params)
+    post_draft.save
+
+    flash.now[:notice] = "Draft saved successfully"
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("flash", partial: "layouts/flash")
+      end
+    end
+  end
+
   private
   def set_post
     @post = Post.find(params[:id])
   end
 
   def post_params
-    params.require(:post).permit(:title, :views)
+    params.require(:post).permit(:title, :views, :body)
   end
 end
