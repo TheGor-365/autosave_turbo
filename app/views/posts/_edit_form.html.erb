@@ -17,11 +17,6 @@
     <%= form.rich_text_area :body, data: { action: 'keyup->poster#save blur->poster#save' } %>
   </div>
 
-  <div>
-    <%= form.label :views, style: "display: block" %>
-    <%= form.number_field :views %>
-  </div>
-
   <div class="mt-3">
     <%= form.submit class: "btn btn-sm btn-success" %>
   </div>
